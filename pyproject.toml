@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "html2md"
 version = "0.1.0"
-description = "A python script that reads a not so complicated webpage and spits out a markdown file that renders the same page."
+description = "A python script that reads a webpage and spits out a markdown file that renders the same page."
 authors = ["mungai-njoroge <geoffreymungai45@gmail.com>"]
 license = "MIT"
 readme = "README.md"
