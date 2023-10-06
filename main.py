@@ -4,47 +4,111 @@ import requests
 from bs4 import BeautifulSoup
 from markdownify import MarkdownConverter
 
-debian_news_url = 'https://wiki.debian.org/News'
-filepath = 'debian_news.md'
+debian_news_url = "https://wiki.debian.org/News"
+filepath = "debian_news.md"
 
-def md(soup, **options):
+title_id = "locationline"
+pageinfo_id = "pageinfo"
+content_id = "content"
+
+
+def get_md(content, **options):
     """
     Converts a BeautifulSoup4 object to Markdown
+
+    :param content: BeautifulSoup object
+    :param options: Markdownify options
+    :return: Markdown string
     """
-    return MarkdownConverter(**options, heading_style="ATX").convert_soup(soup)
+    markdown = MarkdownConverter(**options, heading_style="ATX").convert_soup(content)
+    markdown = markdown.strip() + "\n\n"
+    return markdown
 
-# Send an HTTP GET request to fetch the page content
-response = requests.get(debian_news_url)
 
-if response.status_code != 200:
-    print(f'Failed to retrieve the Debian News page. Status code: {response.status_code}')
-    sys.exit(1)
+def fetch_page(url: str):
+    """
+    Fetches the page content from the given URL
+    and returns it as a string. Exits if the request fails.
 
-# Parse the HTML content using BeautifulSoup
-soup = BeautifulSoup(response.text, 'html.parser')
+    :param url: URL of the page to fetch
+    :return: Page content as a string
+    """
+    response = requests.get(debian_news_url)
 
-# get text of element with id="locationline"
-page_title = soup.find(id="locationline").get_text()
-pageinfo = soup.find(id="pageinfo").get_text()
+    if response.status_code != 200:
+        print(
+            f"Failed to retrieve the Debian News page. Status code: {response.status_code}"
+        )
+        sys.exit(1)
 
-# Extract last updated date from #pageinfo node
-last_updated = pageinfo.split("modified")[1].replace(")", "").strip()
+    return response.text
 
-# Create frontmatter
-frontmatter = f"---\ntitle: {page_title.strip()}\nlast_updated: {last_updated}\n---\n\n"
 
-content = soup.find('div', {'id': 'content'})
+def get_frontmatter(page: BeautifulSoup):
+    """
+    Extracts metadata from the page and returns it as a
+    frontmatter string.
 
-# remove translation links
-content.find('small').decompose()
+    :param page: BeautifulSoup object of the page
+    :return: Frontmatter string
+    """
+    page_title = page.find(id=title_id).get_text()
+    pageinfo = page.find(id=pageinfo_id).get_text()
 
-# remove lines
-for line in content.find_all("hr"):
-    line.decompose()
+    # Extract last updated date from #pageinfo node
+    last_updated = pageinfo.split("modified")[1].replace(")", "").strip()
 
-# Write the markdown file
-with open(filepath, 'w', encoding='utf-8') as markdown_file:
-    markdown = md(content).strip()
-    text = frontmatter + markdown + '\n\n'
-    markdown_file.write(text)
-    print(f'Wrote {len(text)} bytes to {filepath}')
+    return f"---\ntitle: {page_title.strip()}\nlast_updated: {last_updated}\n---\n\n"
+
+
+def get_content(page: BeautifulSoup):
+    """
+    Returns the content of the page as a BeautifulSoup object
+
+    :param page: BeautifulSoup object of the page
+    :return: BeautifulSoup object of the content
+    """
+    content = page.find("div", {"id": content_id})
+
+    # remove translation links
+    content.find("small").decompose()
+
+    # remove lines
+    for line in content.find_all("hr"):
+        line.decompose()
+
+    return content
+
+
+def save_to_file(path: str, content: str):
+    """
+    Saves the content to the given path. Overwrites the file if it exists.
+
+    :param path: Path to the file
+    :param content: Content to write
+    """
+    with open(path, "w", encoding="utf-8") as file:
+        file.write(content)
+        print(f"Wrote {len(content)} bytes to {path}")
+
+
+def run_all():
+    """
+    Fetches the Debian News page, extracts the content and saves it to a file.
+    """
+    page = fetch_page(debian_news_url)
+    page = BeautifulSoup(page, "html.parser")
+
+    frontmatter = get_frontmatter(page)
+    content = get_content(page)
+
+    markdown = get_md(content)
+    text = frontmatter + markdown
+
+    save_to_file(filepath, text)
+
+
+if __name__ == "__main__":
+    run_all()
+
+# TODO: FIX DESCRIPTION LISTS
