@@ -16,11 +16,10 @@ from main import (
 
 last_updated = "2021-08-01"
 page_title = "News"
-translations = "<small>Translation links</small>"
-frontmatter = f"---\ntitle: {page_title.strip()}\nlast_updated: {last_updated}\n---\n\n"
+translations = '<small><a href="/uk/News">Українська</a> - <a href="/vi/News">tiếng Việt</a></small>'
+frontmatter = f"---\ntitle: {page_title.strip()}\nlast_updated: {last_updated}\ntranslations:\n  - Українська: /uk/News\n  - tiếng Việt: /vi/News\n---\n\n"
 
 page_content_html = f'<div id="content"><hr>{translations}<b>Page content</b><hr></div>'
-
 page_html = f"""
 <html>
 <body>

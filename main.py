@@ -44,6 +44,28 @@ def fetch_page(url: str):
     return response.text
 
 
+def get_translations_frontmatter(page: BeautifulSoup):
+    """
+    Extracts the translation links from the page and returns them as a
+    frontmatter string.
+
+    :param page: BeautifulSoup object of the page
+    :return: Frontmatter entry string
+    """
+    translations_node = page.find("small")
+    translations = []
+
+    # for each a tag in the translations node, extract the href + text
+    for link in translations_node.find_all("a"):
+        href = link.get("href")
+        text = link.get_text()
+        translations.append(f"  - {text}: {href}")
+
+    # format the translations list as a frontmatter list entry
+    translations = "\n".join(translations)
+    return f"translations:\n{translations}\n"
+
+
 def get_frontmatter(page: BeautifulSoup):
     """
     Extracts metadata from the page and returns it as a
@@ -52,13 +74,15 @@ def get_frontmatter(page: BeautifulSoup):
     :param page: BeautifulSoup object of the page
     :return: Frontmatter string
     """
+    translations = get_translations_frontmatter(page)
+
     page_title = page.find(id=title_id).get_text()
     pageinfo = page.find(id=pageinfo_id).get_text()
 
     # Extract last updated date from #pageinfo node
     last_updated = pageinfo.split("modified")[1].replace(")", "").strip()
 
-    return f"---\ntitle: {page_title.strip()}\nlast_updated: {last_updated}\n---\n\n"
+    return f"---\ntitle: {page_title.strip()}\nlast_updated: {last_updated}\n{translations}---\n\n"
 
 
 def get_content(page: BeautifulSoup):
@@ -71,7 +95,7 @@ def get_content(page: BeautifulSoup):
     content = page.find("div", {"id": content_id})
 
     # remove translation links
-    content.find("small").decompose()
+    content.find("small").decompose()  # first <small> node
 
     # remove lines
     for line in content.find_all("hr"):
