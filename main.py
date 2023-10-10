@@ -97,9 +97,12 @@ def get_content(page: BeautifulSoup):
     # remove translation links
     content.find("small").decompose()  # first <small> node
 
-    # remove lines
-    for line in content.find_all("hr"):
-        line.decompose()
+    # find all dt nodes and change them to h3
+    for dt in content.find_all("dt"):
+        dt.name = "h3"
+
+    # remove first horizontal line
+    content.find("hr").decompose()
 
     return content
 

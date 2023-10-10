@@ -19,7 +19,7 @@ page_title = "News"
 translations = '<small><a href="/uk/News">Українська</a> - <a href="/vi/News">tiếng Việt</a></small>'
 frontmatter = f"---\ntitle: {page_title.strip()}\nlast_updated: {last_updated}\ntranslations:\n  - Українська: /uk/News\n  - tiếng Việt: /vi/News\n---\n\n"
 
-page_content_html = f'<div id="content"><hr>{translations}<b>Page content</b><hr></div>'
+page_content_html = f'<div id="content"><hr/>{translations}<b>Page content</b><hr/></div>'
 page_html = f"""
 <html>
 <body>
@@ -76,7 +76,7 @@ class TestGetContent(unittest.TestCase):
         )
 
         result = get_content(page)
-        assert_to = page_content_html.replace(translations, "").replace("<hr>", "")
+        assert_to = page_content_html.replace(translations, "").replace("<hr/>", "", 1)
 
         self.assertEqual(
             str(result),
@@ -90,7 +90,7 @@ class TestGetMd(unittest.TestCase):
         content = get_content(page)
         result = get_md(content)
 
-        self.assertEqual(result.strip(), "**Page content**")
+        self.assertEqual(result.strip(), "**Page content**\n\n---")
 
 
 class TestSaveToFile(unittest.TestCase):
