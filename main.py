@@ -33,7 +33,7 @@ def fetch_page(url: str):
     :param url: URL of the page to fetch
     :return: Page content as a string
     """
-    response = requests.get(debian_news_url)
+    response = requests.get(url)
 
     if response.status_code != 200:
         print(
@@ -119,23 +119,23 @@ def save_to_file(path: str, content: str):
         print(f"Wrote {len(content)} bytes to {path}")
 
 
-def run_all():
+class PageToMd:
     """
-    Fetches the Debian News page, extracts the content and saves it to a file.
+    Class that orchastrates the conversion of the Debian News page
     """
-    page = fetch_page(debian_news_url)
-    page = BeautifulSoup(page, "html.parser")
 
-    frontmatter = get_frontmatter(page)
-    content = get_content(page)
+    def __init__(self, url: str, path: str) -> None:
+        page = fetch_page(url)
+        page = BeautifulSoup(page, "html.parser")
 
-    markdown = get_md(content)
-    text = frontmatter + markdown
+        frontmatter = get_frontmatter(page)
+        content = get_content(page)
 
-    save_to_file(filepath, text)
+        markdown = get_md(content)
+        text = frontmatter + markdown
+
+        save_to_file(path, text)
 
 
 if __name__ == "__main__":
-    run_all()
-
-# TODO: FIX DESCRIPTION LISTS
+    PageToMd(debian_news_url, filepath)
