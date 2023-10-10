@@ -125,15 +125,14 @@ class PageToMd:
     """
 
     def __init__(self, url: str, path: str) -> None:
-        page = fetch_page(url)
-        page = BeautifulSoup(page, "html.parser")
+        html = fetch_page(url)
+        page = BeautifulSoup(html, "html.parser")
 
         frontmatter = get_frontmatter(page)
         content = get_content(page)
-
         markdown = get_md(content)
-        text = frontmatter + markdown
 
+        text = frontmatter + markdown
         save_to_file(path, text)
 
 
