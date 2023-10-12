@@ -8,6 +8,8 @@ Clone this repo locally, create a virtual environment, install dependencies and 
 
 ```sh
 git clone https://github.com/mungai-njoroge/html2md.git
+
+cd html2md
 ```
 
 If you have [Poetry](https://python-poetry.org) installed:
