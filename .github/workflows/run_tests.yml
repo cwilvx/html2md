@@ -1,4 +1,5 @@
-name: Run Pytest
+name: Run Tests
+run-name: "Test: ${{github.event.head_commit.message}}"
 on: push
 jobs:
   pytest:
@@ -12,6 +13,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-      - name: Run tests
+      - name: Run pytest
         run: |
           python -m pytest
