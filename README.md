@@ -4,7 +4,7 @@
 
 A python script that reads the [debian news page](https://wiki.debian.org/News) and spits out a markdown file that renders the same page.
 
-> [Read the thought process](thought-process.md)
+> [Read the thought process](./thought-process.md)
 
 ## Running it
 
