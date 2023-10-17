@@ -1,6 +1,9 @@
-name: Run Tests
+name: Tests
 run-name: "Test: ${{github.event.head_commit.message}}"
-on: push
+on:
+  push:
+    paths:
+      - "**.py"
 jobs:
   pytest:
     runs-on: ubuntu-latest
