@@ -134,7 +134,7 @@ def format_internal_links(page: BeautifulSoup):
 
 class PageToMd:
     """
-    Class that orchastrates the conversion of the Debian News page
+    Class that orchastrates the conversion of the Debian News page.
     """
 
     def __init__(self, url: str, path: str) -> None:

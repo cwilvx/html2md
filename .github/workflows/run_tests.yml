@@ -6,6 +6,7 @@ on:
       - "**.py"
 jobs:
   pytest:
+    name: Run Pytest
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

@@ -1,5 +1,5 @@
 # html2md
-[![Run Tests](https://github.com/mungai-njoroge/html2md/actions/workflows/run_tests.yml/badge.svg)](https://github.com/mungai-njoroge/html2md/actions/workflows/run_tests.yml)
+[![Tests](https://github.com/mungai-njoroge/html2md/actions/workflows/run_tests.yml/badge.svg)](https://github.com/mungai-njoroge/html2md/actions/workflows/run_tests.yml)
 
 A python script that reads the [debian news page](https://wiki.debian.org/News) and spits out a markdown file that renders the same page.
 
