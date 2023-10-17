@@ -5,12 +5,14 @@ from unittest.mock import patch, MagicMock
 from bs4 import BeautifulSoup
 
 from main import (
+    domain,
+    debian_news_url,
     fetch_page,
     get_content,
     get_frontmatter,
     get_md,
     save_to_file,
-    debian_news_url,
+    format_internal_links,
 )
 
 
@@ -19,7 +21,9 @@ page_title = "News"
 translations = '<small><a href="/uk/News">Українська</a> - <a href="/vi/News">tiếng Việt</a></small>'
 frontmatter = f"---\ntitle: {page_title.strip()}\nlast_updated: {last_updated}\ntranslations:\n  - Українська: /uk/News\n  - tiếng Việt: /vi/News\n---\n\n"
 
-page_content_html = f'<div id="content"><hr/>{translations}<b>Page content</b><hr/></div>'
+page_content_html = (
+    f'<div id="content"><hr/>{translations}<b>Page content</b><hr/></div>'
+)
 page_html = f"""
 <html>
 <body>
@@ -109,3 +113,17 @@ class TestSaveToFile(unittest.TestCase):
             result = f.read()
 
         self.assertEqual(result, content)
+
+
+class TestFormatInterlLinks(unittest.TestCase):
+    def test_format_internal_links(self):
+        test_node_html = '<small><a href="/uk/News">Українська</a></small>'
+        test_node = BeautifulSoup(
+            test_node_html,
+            "html.parser",
+        )
+
+        result = str(format_internal_links(test_node)).strip()
+        should_be = test_node_html.replace("/uk/News", domain + "/uk/News")
+
+        self.assertEqual(result, should_be)

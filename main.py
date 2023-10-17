@@ -4,7 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 from markdownify import MarkdownConverter
 
-debian_news_url = "https://wiki.debian.org/News"
+domain = "https://wiki.debian.org"
+debian_news_url = domain + "/News"
 filepath = "debian_news.md"
 
 title_id = "locationline"
@@ -119,6 +120,18 @@ def save_to_file(path: str, content: str):
         print(f"Wrote {len(content)} bytes to {path}")
 
 
+def format_internal_links(page: BeautifulSoup):
+    """
+    Formats internal links to be relative to the current page.
+    """
+    for link in page.find_all("a"):
+        href = link.get("href")
+        if href.startswith("/"):
+            link["href"] = domain + href
+
+    return page
+
+
 class PageToMd:
     """
     Class that orchastrates the conversion of the Debian News page
@@ -127,6 +140,7 @@ class PageToMd:
     def __init__(self, url: str, path: str) -> None:
         html = fetch_page(url)
         page = BeautifulSoup(html, "html.parser")
+        page = format_internal_links(page)
 
         frontmatter = get_frontmatter(page)
         content = get_content(page)
