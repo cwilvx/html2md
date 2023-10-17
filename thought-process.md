@@ -57,11 +57,13 @@ Here’s what I came up with. 👇👇
 
 <https://github.com/mungai-njoroge/html2md/blob/main/test_main.py>
 
-All the tests are currently passing.
+I also wrote a Github workflow that runs the tests on pushes where `.py` files are modified. Click on the badge below to see the workflow on Github.
+
+[![Tests](https://github.com/mungai-njoroge/html2md/actions/workflows/run_tests.yml/badge.svg)](https://github.com/mungai-njoroge/html2md/actions/workflows/run_tests.yml)
 
 ## Challenges
 
-Writing tests was a challenge due to my lack of prior experience. I overcame it by updating my knowledge base through learning how to write tests with the aid of guides. The "[Getting Started With Testing in Python](https://realpython.com/python-testing/)" guide in particular was a life saver.
+Writing tests was a challenge due to my lack of experience working with tests. I overcame it by updating my knowledge base through learning how to write tests with the aid of guides. The "[Getting Started With Testing in Python](https://realpython.com/python-testing/)" guide in particular was a life saver.
 
 ## Conclusion
 
